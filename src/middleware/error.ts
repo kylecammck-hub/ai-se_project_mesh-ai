@@ -14,6 +14,7 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
   ) => {
+  void next;
     console.error(err);
     res.status(500).json({
       success: false,
