@@ -29,7 +29,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
               res.status(409).json({
                         success: false,
                         data: null,
-                        error: { message: 'user already exists' },
+        error: { message: 'Email already in use' }, 
               });
               return;
       }
@@ -39,7 +39,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
       res.status(201).json({
               success: true,
-              data: { id: user._id, email: user.email, name: user.name },
+              data: { userId: user._id, email: user.email, name: user.name },
               error: null,
       });
 };
@@ -80,7 +80,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
       res.status(200).json({
               success: true,
-              data: { token, user: { id: user._id, email: user.email, name: user.name } },
+              data: { token, user: { userId: user._id, email: user.email, name: user.name } },
               error: null,
       });
 };
