@@ -65,3 +65,16 @@ export function getChat(chatId: string): Promise<{ chat: Chat; messages: Message
   }).then((res) => parseResponse<{ chat: Chat; messages: Message[] }>(res));
 }
 
+export function sendMessage(chatId: string, question: string): Promise<Message> {
+  return fetch(`${API_BASE_URL}/chats/${chatId}/messages`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...getAuthHeaders(),
+    },
+    body: JSON.stringify({ question }),
+  })
+    .then((res) => parseResponse<Message[]>(res))
+    .then((messages) => messages[1]);
+}
+
