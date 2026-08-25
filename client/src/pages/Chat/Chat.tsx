@@ -89,7 +89,52 @@ export default function Chat() {
         </ul>
       </aside>
 
-      <div className="chat__main">{/* message area — coming next lesson */}</div>
+      <div className="chat__main">
+        {!messagesError && !isLoadingMessages && !activeChatId && (
+          <div className="chat__no-messages">
+            <p>Create a new chat or select an existing chat to start the conversation</p>
+            <button type="button" className="chat__cta-btn">
+              Start New Chat
+            </button>
+          </div>
+        )}
+
+        {!messagesError && !isLoadingMessages && activeChatId && messages.length === 0 && (
+          <div className="chat__no-messages">
+            <p>Ask a question below to start the conversation</p>
+          </div>
+        )}
+
+        {activeChatId && isLoadingMessages && (
+          <p className="chat__no-messages">Loading…</p>
+        )}
+
+        {activeChatId && messagesError && (
+          <div className="chat__error">
+            <div className="chat__error-icon" aria-hidden="true">
+              ⚠️
+            </div>
+            <h2 className="chat__error-title">Looks like something went wrong</h2>
+            <p className="chat__error-text">Try reloading the page or creating the chat again</p>
+            <button type="button" className="chat__cta-btn">
+              Go to the Main Page
+            </button>
+          </div>
+        )}
+
+        {activeChatId && !isLoadingMessages && !messagesError && (
+          <ul className="chat__messages">
+            {messages.map((message) => (
+              <li
+                key={message._id}
+                className={`chat__message${message.role === 'user' ? ' chat__message_user' : ''}`}
+              >
+                <p className="chat__message-text">{message.content}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
