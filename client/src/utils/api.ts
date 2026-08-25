@@ -5,6 +5,14 @@ export interface Chat {
   createdAt: string;
 }
 
+export interface Message {
+  _id: string;
+  chatId: string;
+  role: 'user' | 'assistant';
+  content: string;
+  createdAt: string;
+}
+
 interface ApiError {
   message: string;
 }
@@ -50,3 +58,10 @@ export function createChat(title: string): Promise<Chat> {
     body: JSON.stringify({ title }),
   }).then((res) => parseResponse<Chat>(res));
 }
+
+export function getChat(chatId: string): Promise<{ chat: Chat; messages: Message[] }> {
+  return fetch(`${API_BASE_URL}/chats/${chatId}`, {
+    headers: getAuthHeaders(),
+  }).then((res) => parseResponse<{ chat: Chat; messages: Message[] }>(res));
+}
+
