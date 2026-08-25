@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getChats, createChat, getChat, Chat as ChatType, Message } from '../../utils/api';
+import { getChats, createChat, getChat, sendMessage, Chat as ChatType, Message } from '../../utils/api';
 import './Chat.css';
 
 export default function Chat() {
@@ -12,6 +12,8 @@ export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoadingMessages, setIsLoadingMessages] = useState<boolean>(false);
   const [messagesError, setMessagesError] = useState<string>('');
+  const [input, setInput] = useState<string>('');
+  const [isSending, setIsSending] = useState<boolean>(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -63,6 +65,43 @@ export default function Chat() {
   function getChatItemClass(chatId: string) {
     return `chat__item${chatId === activeChatId ? ' chat__item_active' : ''}`;
   }
+
+  const handleSend = async () => {
+    const text = input.trim();
+    if (!text || !activeChatId || isSending) return;
+
+    const userMessage: Message = {
+      _id: Date.now().toString(),
+      chatId: activeChatId,
+      role: 'user',
+      content: text,
+      createdAt: new Date().toISOString(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput('');
+    setIsSending(true);
+
+    try {
+      const res = await sendMessage(activeChatId, text);
+      if (res) {
+        setMessages((prev) => [...prev, res]);
+      }
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          _id: Date.now().toString(),
+          chatId: activeChatId,
+          role: 'assistant',
+          content: 'Something went wrong. Please try again.',
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   return (
     <div className="chat">
@@ -137,14 +176,18 @@ export default function Chat() {
 
               <div className="chat__input-bar">
                 <textarea
-                  className="chat__input"
-                  placeholder="Ask any question"
-                  rows={1}
-                />
-                <button
-                  className="chat__send"
-                  aria-label="Send message"
-                ></button>
+                className="chat__input"
+                placeholder="Ask any question"
+                rows={1}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              />
+              <button
+                className="chat__send"
+                aria-label="Send message"
+                onClick={handleSend}
+                disabled={isSending || !input.trim()}
+              ></button>
               </div>
             </>
           )}
