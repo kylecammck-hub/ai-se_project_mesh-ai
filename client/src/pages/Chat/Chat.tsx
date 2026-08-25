@@ -38,6 +38,28 @@ export default function Chat() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!activeChatId) {
+      return;
+    }
+
+    const load = async () => {
+      setMessages([]);
+      setMessagesError('');
+      setIsLoadingMessages(true);
+      try {
+        const res = await getChat(activeChatId);
+        setMessages(res.messages || []);
+      } catch {
+        setMessagesError('Failed to load messages');
+      } finally {
+        setIsLoadingMessages(false);
+      }
+    };
+
+    load();
+  }, [activeChatId]);
+
   function getChatItemClass(chatId: string) {
     return `chat__item${chatId === activeChatId ? ' chat__item_active' : ''}`;
   }
