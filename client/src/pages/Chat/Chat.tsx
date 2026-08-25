@@ -123,17 +123,31 @@ export default function Chat() {
         )}
 
         {activeChatId && !isLoadingMessages && !messagesError && (
-          <ul className="chat__messages">
-            {messages.map((message) => (
-              <li
-                key={message._id}
-                className={`chat__message${message.role === 'user' ? ' chat__message_user' : ''}`}
-              >
-                <p className="chat__message-text">{message.content}</p>
-              </li>
-            ))}
-          </ul>
-        )}
+            <>
+              <ul className="chat__messages">
+                {messages.map((message) => (
+                  <li
+                    key={message._id}
+                    className={`chat__message${message.role === 'user' ? ' chat__message_user' : ''}`}
+                  >
+                    <p className="chat__message-text">{message.content}</p>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="chat__input-bar">
+                <textarea
+                  className="chat__input"
+                  placeholder="Ask any question"
+                  rows={1}
+                />
+                <button
+                  className="chat__send"
+                  aria-label="Send message"
+                ></button>
+              </div>
+            </>
+          )}
       </div>
     </div>
   );
