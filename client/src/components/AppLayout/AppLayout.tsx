@@ -10,6 +10,7 @@ export default function AppLayout() {
     <div className="app-layout">
       <Header
         onMenuOpen={() => setIsMobileMenuOpen(true)}
+        onMenuClose={() => setIsMobileMenuOpen(false)}
         isMobileMenuOpen={isMobileMenuOpen}
       />
 
