@@ -35,6 +35,10 @@ export default function Chat() {
     };
   }, []);
 
+  function getChatItemClass(chatId: string) {
+    return `chat__item${chatId === activeChatId ? ' chat__item_active' : ''}`;
+  }
+
   return (
     <div className="chat">
       <aside className="chat__sidebar">
@@ -46,7 +50,17 @@ export default function Chat() {
         {chatsError && <p className="chat__sidebar-message">{chatsError}</p>}
 
         <ul className="chat__list">
-          {/* chats are rendered here in the next step */}
+          {chats.map((chat) => (
+            <li key={chat._id}>
+              <button
+                type="button"
+                className={getChatItemClass(chat._id)}
+                onClick={() => setActiveChatId(chat._id)}
+              >
+                {chat.title}
+              </button>
+            </li>
+          ))}
         </ul>
       </aside>
 
