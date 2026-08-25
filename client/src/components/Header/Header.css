@@ -48,3 +48,23 @@
 .header__link_active {
   background-color: rgba(150, 121, 217, 0.2);
 }
+
+.header__menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  font-size: 20px;
+  line-height: 1;
+  color: #1c1c1c;
+  cursor: pointer;
+}
+
+.header__menu-btn:hover {
+  background-color: rgba(150, 121, 217, 0.08);
+}
