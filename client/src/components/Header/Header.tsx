@@ -1,7 +1,12 @@
 import { NavLink } from 'react-router-dom';
 import './Header.css';
 
-export default function Header() {
+interface HeaderProps {
+  isMobileMenuOpen: boolean;
+  onMenuOpen: () => void;
+}
+
+export default function Header({ isMobileMenuOpen, onMenuOpen }: HeaderProps) {
   function getNavLinkClass({ isActive }: { isActive: boolean }) {
     return `header__link${isActive ? ' header__link_active' : ''}`;
   }
@@ -21,6 +26,16 @@ export default function Header() {
           Chat
         </NavLink>
       </nav>
+
+      <button
+        type="button"
+        className="header__menu-btn"
+        aria-label="Open menu"
+        aria-expanded={isMobileMenuOpen}
+        onClick={onMenuOpen}
+      >
+        ☰
+      </button>
     </header>
   );
 }
