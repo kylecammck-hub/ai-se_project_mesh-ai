@@ -87,4 +87,120 @@
 
 .chat__main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.chat__no-messages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: 670px;
+  max-width: 100%;
+  margin: 0;
+  text-align: center;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 100%;
+  color: #1c1c1c;
+}
+
+.chat__no-messages p {
+  margin: 0;
+}
+
+.chat__cta-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  height: 44px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #1c1c1c;
+  color: #ffffff;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.chat__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 670px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.chat__error-icon {
+  font-size: 64px;
+  line-height: 1;
+}
+
+.chat__error-title {
+  margin: 0;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 100%;
+  color: #e36161;
+}
+
+.chat__error-text {
+  margin: 0;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 100%;
+  color: #1c1c1c;
+}
+
+.chat__messages {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 670px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.chat__message {
+  display: flex;
+}
+
+.chat__message_user {
+  justify-content: flex-end;
+}
+
+.chat__message-text {
+  margin: 0;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 100%;
+  color: #1c1c1c;
+  white-space: pre-wrap;
+}
+
+.chat__message_user .chat__message-text {
+  max-width: 330px;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: rgba(28, 28, 28, 0.05);
+  box-sizing: border-box;
 }
