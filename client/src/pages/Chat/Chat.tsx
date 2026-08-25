@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { getChats, createChat, getChat, sendMessage, Chat as ChatType, Message } from '../../utils/api';
 import './Chat.css';
 
+type MobileContext = {
+  isMobileMenuOpen: boolean;
+  setIsMobileMenuOpen: (open: boolean) => void;
+};
+
 export default function Chat() {
+  const { isMobileMenuOpen, setIsMobileMenuOpen } = useOutletContext<MobileContext>();
   const [chats, setChats] = useState<ChatType[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [chatsError, setChatsError] = useState<string | null>(null);
@@ -66,6 +73,23 @@ export default function Chat() {
     return `chat__item${chatId === activeChatId ? ' chat__item_active' : ''}`;
   }
 
+  const handleCreateChat = async () => {
+    const title = newChatTitle.trim();
+    if (!title) return;
+
+    try {
+      const chat = await createChat(title);
+      setChats((prev) => [...prev, chat]);
+      setActiveChatId(chat._id);
+      setIsMobileMenuOpen(false);
+    } catch {
+      setChatsError('Failed to create chat');
+    } finally {
+      setIsCreatingChat(false);
+      setNewChatTitle('');
+    }
+  };
+
   const handleSend = async () => {
     const text = input.trim();
     if (!text || !activeChatId || isSending) return;
@@ -105,10 +129,37 @@ export default function Chat() {
 
   return (
     <div className="chat">
-      <aside className="chat__sidebar">
-        <button className="chat__new-btn" type="button">
-          + New Chat
-        </button>
+      <aside
+        className={`chat__sidebar${
+          isMobileMenuOpen ? ' chat__sidebar_open' : ''
+        }`}
+      >
+        {isCreatingChat ? (
+          <form
+            className="chat__new-chat-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleCreateChat();
+            }}
+          >
+            <input
+              type="text"
+              className="chat__new-chat-input"
+              placeholder="Chat name"
+              value={newChatTitle}
+              onChange={(e) => setNewChatTitle(e.target.value)}
+              autoFocus
+            />
+          </form>
+        ) : (
+          <button
+            className="chat__new-btn"
+            type="button"
+            onClick={() => setIsCreatingChat(true)}
+          >
+            + New Chat
+          </button>
+        )}
 
         {isLoadingChats && <p className="chat__sidebar-message">Loading…</p>}
         {chatsError && <p className="chat__sidebar-message">{chatsError}</p>}
@@ -119,7 +170,10 @@ export default function Chat() {
               <button
                 type="button"
                 className={getChatItemClass(chat._id)}
-                onClick={() => setActiveChatId(chat._id)}
+                onClick={() => {
+                  setActiveChatId(chat._id);
+                  setIsMobileMenuOpen(false);
+                }}
               >
                 {chat.title}
               </button>
@@ -132,7 +186,14 @@ export default function Chat() {
         {!messagesError && !isLoadingMessages && !activeChatId && (
           <div className="chat__no-messages">
             <p>Create a new chat or select an existing chat to start the conversation</p>
-            <button type="button" className="chat__cta-btn">
+            <button
+              type="button"
+              className="chat__cta-btn"
+              onClick={() => {
+                setIsCreatingChat(true);
+                setIsMobileMenuOpen(true);
+              }}
+            >
               Start New Chat
             </button>
           </div>
@@ -162,20 +223,20 @@ export default function Chat() {
         )}
 
         {activeChatId && !isLoadingMessages && !messagesError && (
-            <>
-              <ul className="chat__messages">
-                {messages.map((message) => (
-                  <li
-                    key={message._id}
-                    className={`chat__message${message.role === 'user' ? ' chat__message_user' : ''}`}
-                  >
-                    <p className="chat__message-text">{message.content}</p>
-                  </li>
-                ))}
-              </ul>
+          <>
+            <ul className="chat__messages">
+              {messages.map((message) => (
+                <li
+                  key={message._id}
+                  className={`chat__message${message.role === 'user' ? ' chat__message_user' : ''}`}
+                >
+                  <p className="chat__message-text">{message.content}</p>
+                </li>
+              ))}
+            </ul>
 
-              <div className="chat__input-bar">
-                <textarea
+            <div className="chat__input-bar">
+              <textarea
                 className="chat__input"
                 placeholder="Ask any question"
                 rows={1}
@@ -188,9 +249,9 @@ export default function Chat() {
                 onClick={handleSend}
                 disabled={isSending || !input.trim()}
               ></button>
-              </div>
-            </>
-          )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
