@@ -1,19 +1,18 @@
 import { useNavigate } from 'react-router-dom';
+import { LogoMark, DocumentsIcon, FolderIcon, SparkleStackIcon } from '../../components/icons/Icons';
 import './Intro.css';
 
-// Export each icon from Figma (Intro page > Card > Intro > Onboarding cards > Card > Icon)
-// as a PNG at 106px wide and drop it into client/public/images/.
 const FEATURES = [
   {
-    icon: '/images/intro-icon-documents.png',
+    Icon: DocumentsIcon,
     text: 'Bring all your documents into one secure AI workspace',
   },
   {
-    icon: '/images/intro-icon-organize.png',
+    Icon: FolderIcon,
     text: 'Organize and manage the documents that power your AI',
   },
   {
-    icon: '/images/intro-icon-chat.png',
+    Icon: SparkleStackIcon,
     text: 'Your knowledge base, accessible through a simple chat interface',
   },
 ];
@@ -29,19 +28,14 @@ export default function Intro() {
     <section className="intro">
       <h1 className="intro__title">
         Welcome to Mesh AI
-        <span className="intro__title-icon" aria-hidden="true" />
+        <LogoMark className="intro__title-icon" />
       </h1>
 
       <ul className="intro__cards">
-        {FEATURES.map((feature) => (
-          <li className="intro__card" key={feature.text}>
-            <img
-              className="intro__card-icon"
-              src={feature.icon}
-              alt=""
-              width={106}
-            />
-            <p className="intro__card-text">{feature.text}</p>
+        {FEATURES.map(({ Icon, text }) => (
+          <li className="intro__card" key={text}>
+            <Icon className="intro__card-icon" />
+            <p className="intro__card-text">{text}</p>
           </li>
         ))}
       </ul>

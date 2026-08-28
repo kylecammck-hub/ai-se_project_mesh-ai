@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { LogoMark } from '../icons/Icons';
 import './Header.css';
 
 type Props = {
@@ -22,7 +23,7 @@ export default function Header({ onMenuOpen, onMenuClose, isMobileMenuOpen }: Pr
       />
 
       <div className="header__logo">
-        <span className="header__logo-icon" aria-hidden="true" />
+        <LogoMark className="header__logo-icon" />
         <span className="header__logo-text">Mesh AI</span>
       </div>
 

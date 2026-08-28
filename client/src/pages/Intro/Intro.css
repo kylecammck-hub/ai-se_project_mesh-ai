@@ -25,10 +25,9 @@
 }
 
 .intro__title-icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  background: linear-gradient(135deg, #b9a4f2, #7c5cd6);
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
 }
 
 .intro__cards {
@@ -52,8 +51,8 @@
 }
 
 .intro__card-icon {
-  width: 106px;
-  height: auto;
+  width: 97px;
+  height: 100px;
 }
 
 .intro__card-text {

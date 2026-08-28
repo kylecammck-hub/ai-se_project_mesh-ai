@@ -13,6 +13,14 @@ export interface Message {
   createdAt: string;
 }
 
+export interface Document {
+  _id: string;
+  title: string;
+  fileName: string;
+  userId: string;
+  createdAt: string;
+}
+
 interface ApiError {
   message: string;
 }
@@ -42,39 +50,34 @@ async function parseResponse<T>(res: Response): Promise<T> {
   return body.data;
 }
 
-export function getChats(): Promise<Chat[]> {
-  return fetch(`${API_BASE_URL}/chats`, {
+// Note: chats/messages are intentionally NOT fetched from this API — see
+// utils/chatsStub.ts, which the Chat page reads from instead.
+
+export function getDocuments(): Promise<Document[]> {
+  return fetch(`${API_BASE_URL}/documents`, {
     headers: getAuthHeaders(),
-  }).then((res) => parseResponse<Chat[]>(res));
+  }).then((res) => parseResponse<Document[]>(res));
 }
 
-export function createChat(title: string): Promise<Chat> {
-  return fetch(`${API_BASE_URL}/chats`, {
+export function uploadDocument(file: File): Promise<Document> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  return fetch(`${API_BASE_URL}/documents`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeaders(),
-    },
-    body: JSON.stringify({ title }),
-  }).then((res) => parseResponse<Chat>(res));
-}
-
-export function getChat(chatId: string): Promise<{ chat: Chat; messages: Message[] }> {
-  return fetch(`${API_BASE_URL}/chats/${chatId}`, {
     headers: getAuthHeaders(),
-  }).then((res) => parseResponse<{ chat: Chat; messages: Message[] }>(res));
+    body: formData,
+  }).then((res) => parseResponse<Document>(res));
 }
 
-export function sendMessage(chatId: string, question: string): Promise<Message> {
-  return fetch(`${API_BASE_URL}/chats/${chatId}/messages`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeaders(),
-    },
-    body: JSON.stringify({ question }),
-  })
-    .then((res) => parseResponse<Message[]>(res))
-    .then((messages) => messages[1]);
+export function deleteDocument(documentId: string): Promise<void> {
+  return fetch(`${API_BASE_URL}/documents/${documentId}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  }).then((res) => {
+    if (!res.ok) {
+      throw new Error('Failed to delete document');
+    }
+  });
 }
 

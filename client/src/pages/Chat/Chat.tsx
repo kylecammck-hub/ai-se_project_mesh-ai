@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { getChats, createChat, getChat, sendMessage, Chat as ChatType, Message } from '../../utils/api';
+import type { Chat as ChatType, Message } from '../../utils/api';
+// Chats are served from local stub data rather than the backend — see
+// utils/chatsStub.ts for why.
+import { getChats, createChat, getChat, sendMessage } from '../../utils/chatsStub';
 import './Chat.css';
 
 type MobileContext = {

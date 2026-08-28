@@ -17,8 +17,7 @@
 .header__logo-icon {
   width: 18px;
   height: 18px;
-  border-radius: 4px;
-  background: linear-gradient(135deg, #b9a4f2, #7c5cd6);
+  flex-shrink: 0;
 }
 
 .header__logo-text {
@@ -45,7 +44,12 @@
   text-decoration: none;
 }
 
-.header__link_active {
+.header__link:hover {
+  background-color: rgba(150, 121, 217, 0.1);
+}
+
+.header__link_active,
+.header__link_active:hover {
   background-color: rgba(150, 121, 217, 0.2);
 }
 
