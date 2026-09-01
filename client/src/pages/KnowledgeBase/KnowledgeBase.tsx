@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState, type ChangeEvent, type DragEvent } from 'react';
-import { getDocuments, uploadDocument, deleteDocument, type Document } from '../../utils/api';
+import { type Document } from '../../utils/api';
+// Documents for this page are intentionally NOT fetched from the server.
+// See utils/documentsStub.ts for why.
+import { getDocuments, uploadDocument, deleteDocument } from '../../utils/documentsStub';
 import './KnowledgeBase.css';
 
 // A file the user has picked/dropped but not yet saved to the server.
