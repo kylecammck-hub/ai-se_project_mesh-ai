@@ -4,6 +4,7 @@ import type { Chat as ChatType, Message } from '../../utils/api';
 // Chats are served from local stub data rather than the backend — see
 // utils/chatsStub.ts for why.
 import { getChats, createChat, getChat, sendMessage } from '../../utils/chatsStub';
+import ReactMarkdown from 'react-markdown';
 import './Chat.css';
 
 type MobileContext = {
@@ -239,7 +240,7 @@ export default function Chat() {
                   key={message._id}
                   className={`chat__message${message.role === 'user' ? ' chat__message_user' : ''}`}
                 >
-                  <p className="chat__message-text">{message.content}</p>
+<div className="chat__message-text"><ReactMarkdown>{message.content}</ReactMarkdown></div>
                 </li>
               ))}
             </ul>
