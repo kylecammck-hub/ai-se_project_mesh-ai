@@ -151,6 +151,12 @@ export default function Chat() {
               placeholder="Chat name"
               value={newChatTitle}
               onChange={(e) => setNewChatTitle(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                  setIsCreatingChat(false);
+                  setNewChatTitle('');
+                }
+              }}
               autoFocus
             />
           </form>
