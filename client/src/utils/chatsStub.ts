@@ -31,7 +31,7 @@ let chats: Chat[] = [
   },
 ];
 
-let messagesByChatId: Record<string, StubMessage[]> = {
+const messagesByChatId: Record<string, StubMessage[]> = {
   chat_1: [
     {
       _id: 'msg_1',
