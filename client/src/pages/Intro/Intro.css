@@ -91,3 +91,26 @@
   font-size: 16px;
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  .intro {
+    width: 100%;
+    padding: 24px 20px;
+    gap: 24px;
+  }
+
+  .intro__title {
+    flex-wrap: wrap;
+    font-size: 32px;
+  }
+
+  .intro__cards {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .intro__card {
+    width: 100%;
+    height: auto;
+  }
+}
