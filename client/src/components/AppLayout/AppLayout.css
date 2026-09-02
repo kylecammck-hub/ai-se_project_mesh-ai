@@ -4,6 +4,13 @@
   min-height: 100vh;
 }
 
+.app-layout__backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
 .app-layout__main {
   flex: 1;
 }
