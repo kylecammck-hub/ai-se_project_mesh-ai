@@ -258,3 +258,31 @@
   opacity: 0.8;
 }
 
+@media (max-width: 768px) {
+  .chat {
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .chat__sidebar {
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    left: 0;
+    width: 260px;
+    max-width: 80vw;
+    background-color: #ffffff;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 20;
+  }
+
+  .chat__sidebar_open {
+    transform: translateX(0);
+  }
+
+  .chat__main {
+    width: 100%;
+  }
+}
+
