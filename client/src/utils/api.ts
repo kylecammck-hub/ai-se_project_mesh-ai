@@ -31,11 +31,9 @@ interface ApiResponse<T> {
   error: ApiError | null;
 }
 
-// Requests are same-origin by default: the Vite dev server proxies
-// /auth, /chats, /documents, and /query to the backend (see vite.config.ts),
-// and in production the client is served from the same origin as the API.
-// Override with VITE_API_URL to point at a different backend.
-const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+// The server doesn't run on the same origin as the Vite dev server, so point
+// requests at it directly. Override with VITE_API_URL for other environments.
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 function getAuthHeaders(): HeadersInit {
   const token = localStorage.getItem('token');
