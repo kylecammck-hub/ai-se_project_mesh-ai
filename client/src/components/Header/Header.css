@@ -116,3 +116,9 @@
 .header__menu-btn:hover {
   background-color: rgba(150, 121, 217, 0.08);
 }
+
+.header__logout-btn {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
