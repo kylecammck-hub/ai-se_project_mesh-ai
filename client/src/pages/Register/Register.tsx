@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LogoMark } from '../../components/icons/Icons';
 import { useAuth } from '../../context/AuthContext';
+import { getEmailError, getNameError, getPasswordError } from '../../utils/validation';
 import '../Login/Login.css';
 
 export default function Register() {
@@ -18,8 +19,11 @@ export default function Register() {
     event.preventDefault();
     if (isSubmitting) return;
 
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters');
+    const nameError = getNameError(name);
+    const emailError = getEmailError(email);
+    const passwordError = getPasswordError(password);
+    if (nameError || emailError || passwordError) {
+      setError(nameError || emailError || passwordError);
       return;
     }
 

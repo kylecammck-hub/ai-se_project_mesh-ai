@@ -56,6 +56,7 @@ export default function KnowledgeBase() {
   }
 
   function handleUploadClick() {
+    if (isSaving) return;
     fileInputRef.current?.click();
   }
 
@@ -69,6 +70,7 @@ export default function KnowledgeBase() {
   function handleDrop(event: DragEvent<HTMLDivElement>) {
     event.preventDefault();
     setIsDragActive(false);
+    if (isSaving) return;
     if (event.dataTransfer.files) {
       addFiles(event.dataTransfer.files);
     }
@@ -76,6 +78,7 @@ export default function KnowledgeBase() {
 
   function handleDragOver(event: DragEvent<HTMLDivElement>) {
     event.preventDefault();
+    if (isSaving) return;
     setIsDragActive(true);
   }
 
@@ -136,7 +139,9 @@ export default function KnowledgeBase() {
         <p className="knowledge__label">Upload documents (PDF)</p>
 
         <div
-          className={`knowledge__dropzone${isDragActive ? ' knowledge__dropzone_active' : ''}`}
+          className={`knowledge__dropzone${isDragActive ? ' knowledge__dropzone_active' : ''}${
+            isSaving ? ' knowledge__dropzone_disabled' : ''
+          }`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -165,10 +170,21 @@ export default function KnowledgeBase() {
             />
           </svg>
           <p className="knowledge__dropzone-text">
-            Drag&apos;n&apos;Drop or{' '}
-            <button type="button" className="knowledge__upload-link" onClick={handleUploadClick}>
-              Upload
-            </button>
+            {isSaving ? (
+              'Uploading…'
+            ) : (
+              <>
+                Drag&apos;n&apos;Drop or{' '}
+                <button
+                  type="button"
+                  className="knowledge__upload-link"
+                  onClick={handleUploadClick}
+                  disabled={isSaving}
+                >
+                  Upload
+                </button>
+              </>
+            )}
           </p>
           <input
             ref={fileInputRef}
@@ -177,6 +193,7 @@ export default function KnowledgeBase() {
             multiple
             className="knowledge__file-input"
             onChange={handleFileInputChange}
+            disabled={isSaving}
           />
         </div>
 

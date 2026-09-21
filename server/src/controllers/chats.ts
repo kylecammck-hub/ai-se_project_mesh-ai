@@ -92,39 +92,48 @@ export const sendMessage = async (req: Request, res: Response): Promise<void> =>
           return;
     }
 
-    const userDocs = await Document.find({ userId }, '_id');
-    const docIds = userDocs.map((d) => d._id);
-    const chunkRecords = await Chunk.find({ documentId: { $in: docIds } });
-    const chunks = chunkRecords.map((c) => ({
-          id: String(c._id),
-          documentId: String(c.documentId),
-          text: c.text,
-          embedding: c.embedding,
-    }));
+    try {
+          const userDocs = await Document.find({ userId }, '_id');
+          const docIds = userDocs.map((d) => d._id);
+          const chunkRecords = await Chunk.find({ documentId: { $in: docIds } });
+          const chunks = chunkRecords.map((c) => ({
+                  id: String(c._id),
+                  documentId: String(c.documentId),
+                  text: c.text,
+                  embedding: c.embedding,
+          }));
 
-    const queryEmbedding = await createEmbedding(question);
-    const ranked = rankBySimilarity(queryEmbedding, chunks, 5);
-    const context = buildContext(ranked);
+          const queryEmbedding = await createEmbedding(question);
+          const ranked = rankBySimilarity(queryEmbedding, chunks, 5);
+          const context = buildContext(ranked);
 
-    const completion = await getClient().chat.completions.create({
-          model: LLM_MODEL,
-          messages: [
-            {
-                      role: 'system',
-                      content: 'Answer using only the provided context. If the answer is not in the context, say you do not know.',
-            },
-            { role: 'user', content: `Context:\n${context}\n\nQuestion: ${question}` },
-                ],
-    });
+          const completion = await getClient().chat.completions.create({
+                  model: LLM_MODEL,
+                  messages: [
+                    {
+                              role: 'system',
+                              content: 'Answer using only the provided context. If the answer is not in the context, say you do not know.',
+                    },
+                    { role: 'user', content: `Context:\n${context}\n\nQuestion: ${question}` },
+                        ],
+          });
 
-    const answer = completion.choices[0]?.message?.content ?? '';
+          const answer = completion.choices[0]?.message?.content ?? '';
 
-    const userMessage = await Message.create({ chatId, role: 'user', content: question });
-    const assistantMessage = await Message.create({ chatId, role: 'assistant', content: answer });
+          const userMessage = await Message.create({ chatId, role: 'user', content: question });
+          const assistantMessage = await Message.create({ chatId, role: 'assistant', content: answer });
 
-    res.status(201).json({
-          success: true,
-          data: [userMessage, assistantMessage],
-          error: null,
-    });
+          res.status(201).json({
+                  success: true,
+                  data: [userMessage, assistantMessage],
+                  error: null,
+          });
+    } catch (err) {
+          console.error('sendMessage failed:', err);
+          res.status(500).json({
+                  success: false,
+                  data: null,
+                  error: { message: 'Failed to get a response. Please try again.' },
+          });
+    }
 };

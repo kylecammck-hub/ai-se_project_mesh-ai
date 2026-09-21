@@ -206,6 +206,22 @@
   box-sizing: border-box;
 }
 
+.chat__message_thinking .chat__message-text {
+  color: rgba(28, 28, 28, 0.5);
+  font-style: italic;
+  animation: chat-thinking-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes chat-thinking-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 .chat__input-bar {
   display: flex;
   align-items: center;

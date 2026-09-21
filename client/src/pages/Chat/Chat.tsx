@@ -241,6 +241,11 @@ export default function Chat() {
 <div className="chat__message-text"><ReactMarkdown>{message.content}</ReactMarkdown></div>
                 </li>
               ))}
+              {isSending && (
+                <li className="chat__message chat__message_thinking">
+                  <div className="chat__message-text">Thinking…</div>
+                </li>
+              )}
             </ul>
 
             <div className="chat__input-bar">

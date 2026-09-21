@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogoMark } from '../../components/icons/Icons';
 import { useAuth } from '../../context/AuthContext';
+import { getEmailError, getPasswordError } from '../../utils/validation';
 import './Login.css';
 
 type LocationState = {
@@ -21,6 +22,13 @@ export default function Login() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (isSubmitting) return;
+
+    const emailError = getEmailError(email);
+    const passwordError = getPasswordError(password);
+    if (emailError || passwordError) {
+      setError(emailError || passwordError);
+      return;
+    }
 
     setError('');
     setIsSubmitting(true);

@@ -52,6 +52,11 @@
   background-color: #ece4ff;
 }
 
+.knowledge__dropzone_disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .knowledge__dropzone-icon {
   color: #8a8a8a;
 }
@@ -73,6 +78,12 @@
   color: #7c5cd6;
   text-decoration: underline;
   cursor: pointer;
+}
+
+.knowledge__upload-link:disabled {
+  color: #8a8a8a;
+  cursor: not-allowed;
+  text-decoration: none;
 }
 
 .knowledge__file-input {
