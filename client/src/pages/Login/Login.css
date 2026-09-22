@@ -78,6 +78,18 @@
   border-color: #7c5cd6;
 }
 
+.auth__input_invalid,
+.auth__input_invalid:focus {
+  border-color: #c0392b;
+}
+
+.auth__field-error {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #c0392b;
+}
+
 .auth__error {
   margin: 0;
   font-family: 'Work Sans', sans-serif;

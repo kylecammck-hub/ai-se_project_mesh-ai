@@ -2,39 +2,47 @@ import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthTabs from '../../components/AuthTabs/AuthTabs';
 import { useAuth } from '../../context/AuthContext';
+import { useFormWithValidation, type Validators } from '../../hooks/useFormWithValidation';
 import { getEmailError, getNameError, getPasswordError } from '../../utils/validation';
 import '../Login/Login.css';
+
+type RegisterValues = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+const initialValues: RegisterValues = { name: '', email: '', password: '' };
+
+const validators: Validators<RegisterValues> = {
+  name: getNameError,
+  email: getEmailError,
+  password: (value) => getPasswordError(value),
+};
 
 export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const { values, errors, isValid, handleChange } = useFormWithValidation(
+    initialValues,
+    validators,
+  );
+  const [submitError, setSubmitError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (isSubmitting) return;
+    if (!isValid || isSubmitting) return;
 
-    const nameError = getNameError(name);
-    const emailError = getEmailError(email);
-    const passwordError = getPasswordError(password);
-    if (nameError || emailError || passwordError) {
-      setError(nameError || emailError || passwordError);
-      return;
-    }
-
-    setError('');
+    setSubmitError('');
     setIsSubmitting(true);
 
     try {
-      await register(email, password, name);
+      await register(values.email, values.password, values.name.trim());
       navigate('/knowledge', { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create account');
+      setSubmitError(err instanceof Error ? err.message : 'Failed to create account');
     } finally {
       setIsSubmitting(false);
     }
@@ -50,47 +58,55 @@ export default function Register() {
 
         <AuthTabs />
 
-        <form className="auth__form" onSubmit={handleSubmit}>
+        <form className="auth__form" onSubmit={handleSubmit} noValidate>
           <label className="auth__field">
             <span className="auth__label">Name</span>
             <input
               type="text"
-              className="auth__input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              name="name"
+              className={`auth__input${errors.name ? ' auth__input_invalid' : ''}`}
+              value={values.name}
+              onChange={handleChange}
               autoComplete="name"
+              aria-invalid={Boolean(errors.name)}
               required
             />
+            {errors.name && <span className="auth__field-error">{errors.name}</span>}
           </label>
 
           <label className="auth__field">
             <span className="auth__label">Email</span>
             <input
               type="email"
-              className="auth__input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              className={`auth__input${errors.email ? ' auth__input_invalid' : ''}`}
+              value={values.email}
+              onChange={handleChange}
               autoComplete="email"
+              aria-invalid={Boolean(errors.email)}
               required
             />
+            {errors.email && <span className="auth__field-error">{errors.email}</span>}
           </label>
 
           <label className="auth__field">
             <span className="auth__label">Password</span>
             <input
               type="password"
-              className="auth__input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              className={`auth__input${errors.password ? ' auth__input_invalid' : ''}`}
+              value={values.password}
+              onChange={handleChange}
               autoComplete="new-password"
-              minLength={8}
+              aria-invalid={Boolean(errors.password)}
               required
             />
+            {errors.password && <span className="auth__field-error">{errors.password}</span>}
           </label>
 
-          {error && <p className="auth__error">{error}</p>}
+          {submitError && <p className="auth__error">{submitError}</p>}
 
-          <button type="submit" className="auth__button" disabled={isSubmitting}>
+          <button type="submit" className="auth__button" disabled={!isValid || isSubmitting}>
             {isSubmitting ? 'Creating account…' : 'Create account'}
           </button>
         </form>

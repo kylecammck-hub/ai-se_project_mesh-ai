@@ -3,7 +3,26 @@ import { useOutletContext } from 'react-router-dom';
 import { getChats, createChat, getChat, sendMessage } from '../../utils/api';
 import type { Chat as ChatType, Message } from '../../utils/api';
 import ReactMarkdown from 'react-markdown';
+import { useFormWithValidation, type Validators } from '../../hooks/useFormWithValidation';
 import './Chat.css';
+
+type NewChatValues = {
+  title: string;
+};
+
+const CHAT_TITLE_MAX_LENGTH = 60;
+
+const newChatInitialValues: NewChatValues = { title: '' };
+
+const newChatValidators: Validators<NewChatValues> = {
+  title: (value) => {
+    if (!value.trim()) return 'Chat name is required';
+    if (value.trim().length > CHAT_TITLE_MAX_LENGTH) {
+      return `Chat name must be ${CHAT_TITLE_MAX_LENGTH} characters or fewer`;
+    }
+    return '';
+  },
+};
 
 type MobileContext = {
   isMobileMenuOpen: boolean;
@@ -17,7 +36,13 @@ export default function Chat() {
   const [chatsError, setChatsError] = useState<string | null>(null);
   const [isLoadingChats, setIsLoadingChats] = useState<boolean>(true);
   const [isCreatingChat, setIsCreatingChat] = useState<boolean>(false);
-  const [newChatTitle, setNewChatTitle] = useState<string>('');
+  const {
+    values: newChatValues,
+    errors: newChatErrors,
+    isValid: isNewChatValid,
+    handleChange: handleNewChatChange,
+    resetForm: resetNewChatForm,
+  } = useFormWithValidation(newChatInitialValues, newChatValidators);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoadingMessages, setIsLoadingMessages] = useState<boolean>(false);
   const [messagesError, setMessagesError] = useState<string>('');
@@ -76,8 +101,8 @@ export default function Chat() {
   }
 
   const handleCreateChat = async () => {
-    const title = newChatTitle.trim();
-    if (!title) return;
+    if (!isNewChatValid) return;
+    const title = newChatValues.title.trim();
 
     try {
       const chat = await createChat(title);
@@ -88,7 +113,7 @@ export default function Chat() {
       setChatsError('Failed to create chat');
     } finally {
       setIsCreatingChat(false);
-      setNewChatTitle('');
+      resetNewChatForm();
     }
   };
 
@@ -143,21 +168,37 @@ export default function Chat() {
               e.preventDefault();
               handleCreateChat();
             }}
+            noValidate
           >
             <input
               type="text"
-              className="chat__new-chat-input"
+              name="title"
+              className={`chat__new-chat-input${
+                newChatErrors.title ? ' chat__new-chat-input_invalid' : ''
+              }`}
               placeholder="Chat name"
-              value={newChatTitle}
-              onChange={(e) => setNewChatTitle(e.target.value)}
+              value={newChatValues.title}
+              onChange={handleNewChatChange}
               onKeyDown={(e) => {
                 if (e.key === 'Escape') {
                   setIsCreatingChat(false);
-                  setNewChatTitle('');
+                  resetNewChatForm();
                 }
               }}
+              aria-invalid={Boolean(newChatErrors.title)}
+              required
               autoFocus
             />
+            {newChatErrors.title && (
+              <span className="chat__new-chat-error">{newChatErrors.title}</span>
+            )}
+            <button
+              type="submit"
+              className="chat__new-chat-submit"
+              disabled={!isNewChatValid}
+            >
+              Create
+            </button>
           </form>
         ) : (
           <button
