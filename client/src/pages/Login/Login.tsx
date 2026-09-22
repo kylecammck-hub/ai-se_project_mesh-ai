@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogoMark } from '../../components/icons/Icons';
+import { useLocation, useNavigate } from 'react-router-dom';
+import AuthTabs from '../../components/AuthTabs/AuthTabs';
 import { useAuth } from '../../context/AuthContext';
 import { getEmailError, getPasswordError } from '../../utils/validation';
 import './Login.css';
@@ -47,11 +47,12 @@ export default function Login() {
   return (
     <section className="auth">
       <div className="auth__card">
-        <h1 className="auth__title">
-          Welcome back
-          <LogoMark className="auth__title-icon" />
-        </h1>
-        <p className="auth__subtitle">Log in to Mesh AI</p>
+        <div className="auth__header">
+          <h1 className="auth__title">Welcome back</h1>
+          <p className="auth__subtitle">Access your organisation&apos;s secure workspace</p>
+        </div>
+
+        <AuthTabs />
 
         <form className="auth__form" onSubmit={handleSubmit}>
           <label className="auth__field">
@@ -84,10 +85,6 @@ export default function Login() {
             {isSubmitting ? 'Logging in…' : 'Log in'}
           </button>
         </form>
-
-        <p className="auth__switch">
-          Don&apos;t have an account? <Link to="/register">Sign up</Link>
-        </p>
       </div>
     </section>
   );

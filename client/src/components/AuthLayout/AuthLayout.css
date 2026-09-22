@@ -1,0 +1,33 @@
+.auth-layout {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-height: 100vh;
+  padding: 16px 24px;
+  background-color: #ffffff;
+}
+
+.auth-layout__logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+}
+
+.auth-layout__logo-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #1c1c1c;
+}
+
+.auth-layout__logo-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.auth-layout__content {
+  display: flex;
+  flex-grow: 1;
+}

@@ -3,6 +3,7 @@ import './App.css';
 import { AuthProvider } from '../../context/AuthContext';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import AppLayout from '../AppLayout/AppLayout';
+import AuthLayout from '../AuthLayout/AuthLayout';
 import Intro from '../../pages/Intro/Intro';
 import Login from '../../pages/Login/Login';
 import Register from '../../pages/Register/Register';
@@ -15,8 +16,10 @@ function App() {
       <div className="app">
         <Routes>
           <Route path="/" element={<Intro />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Route>
 
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>

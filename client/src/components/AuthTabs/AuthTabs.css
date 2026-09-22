@@ -1,0 +1,28 @@
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.auth-tabs__tab {
+  padding: 8px 12px;
+  border: 1px solid #e0ddea;
+  border-radius: 6px;
+  background-color: #ffffff;
+  font-family: 'Work Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  color: #1c1c1c;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.auth-tabs__tab:hover {
+  border-color: #c9bdf0;
+}
+
+.auth-tabs__tab_active {
+  border-color: #c9bdf0;
+  background-color: #c9bdf0;
+}

@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { LogoMark } from '../../components/icons/Icons';
+import { useNavigate } from 'react-router-dom';
+import AuthTabs from '../../components/AuthTabs/AuthTabs';
 import { useAuth } from '../../context/AuthContext';
 import { getEmailError, getNameError, getPasswordError } from '../../utils/validation';
 import '../Login/Login.css';
@@ -43,11 +43,12 @@ export default function Register() {
   return (
     <section className="auth">
       <div className="auth__card">
-        <h1 className="auth__title">
-          Create your account
-          <LogoMark className="auth__title-icon" />
-        </h1>
-        <p className="auth__subtitle">Sign up for Mesh AI</p>
+        <div className="auth__header">
+          <h1 className="auth__title">Create account</h1>
+          <p className="auth__subtitle">Access your organisation&apos;s secure workspace</p>
+        </div>
+
+        <AuthTabs />
 
         <form className="auth__form" onSubmit={handleSubmit}>
           <label className="auth__field">
@@ -90,13 +91,9 @@ export default function Register() {
           {error && <p className="auth__error">{error}</p>}
 
           <button type="submit" className="auth__button" disabled={isSubmitting}>
-            {isSubmitting ? 'Creating account…' : 'Sign up'}
+            {isSubmitting ? 'Creating account…' : 'Create account'}
           </button>
         </form>
-
-        <p className="auth__switch">
-          Already have an account? <Link to="/login">Log in</Link>
-        </p>
       </div>
     </section>
   );
