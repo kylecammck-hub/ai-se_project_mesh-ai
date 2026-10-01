@@ -6,10 +6,22 @@ import Chunk from '../models/chunk.js';
 import { createEmbedding } from '../utils/embeddings.js';
 import { rankBySimilarity } from '../utils/vector-search.js';
 import { getClient, LLM_MODEL, buildContext } from '../utils/openai-client.js';
+import { logger } from '../utils/logger.js';
+import { getCacheValue, setCacheValue, deleteCacheValue } from '../utils/cache.js';
+
+const chatsCacheKey = (userId: string): string => `chats:${userId}`;
 
 export const getChats = async (req: Request, res: Response): Promise<void> => {
     const userId = req.user!.userId;
+    const cacheKey = chatsCacheKey(userId);
+    const cached = getCacheValue(cacheKey);
+    if (cached) {
+          res.status(200).json({ success: true, data: cached, error: null });
+          return;
+    }
+
     const chats = await Chat.find({ userId });
+    setCacheValue(cacheKey, chats);
 
     res.status(200).json({
           success: true,
@@ -32,6 +44,7 @@ export const createChat = async (req: Request, res: Response): Promise<void> => 
     }
 
     const chat = await Chat.create({ title, userId });
+    deleteCacheValue(chatsCacheKey(userId));
 
     res.status(201).json({
           success: true,
@@ -65,6 +78,7 @@ export const getChatById = async (req: Request, res: Response): Promise<void> =>
 export const deleteChat = async (req: Request, res: Response): Promise<void> => {
     const userId = req.user!.userId;
     await Chat.findOneAndDelete({ _id: req.params.id, userId });
+    deleteCacheValue(chatsCacheKey(userId));
     res.status(204).send();
 };
 
@@ -129,7 +143,8 @@ export const sendMessage = async (req: Request, res: Response): Promise<void> =>
                   error: null,
           });
     } catch (err) {
-          console.error('sendMessage failed:', err);
+          const error = err as Error;
+          logger.error(`sendMessage failed: ${error.message}`, { stack: error.stack });
           res.status(500).json({
                   success: false,
                   data: null,

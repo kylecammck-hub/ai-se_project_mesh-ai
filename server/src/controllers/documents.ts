@@ -5,6 +5,9 @@ import Document from '../models/document.js';
 import Chunk from '../models/chunk.js';
 import { chunkText } from '../utils/chunk.js';
 import { createEmbedding } from '../utils/embeddings.js';
+import { getCacheValue, setCacheValue, deleteCacheValue } from '../utils/cache.js';
+
+const documentsCacheKey = (userId: string): string => `documents:${userId}`;
 
 export const uploadDocument = async (req: Request, res: Response): Promise<void> => {
     const userId = req.user!.userId;
@@ -36,6 +39,8 @@ export const uploadDocument = async (req: Request, res: Response): Promise<void>
           })
         );
 
+    deleteCacheValue(documentsCacheKey(userId));
+
     res.status(201).json({
           success: true,
           data: document,
@@ -45,7 +50,15 @@ export const uploadDocument = async (req: Request, res: Response): Promise<void>
 
 export const getDocuments = async (req: Request, res: Response): Promise<void> => {
     const userId = req.user!.userId;
+    const cacheKey = documentsCacheKey(userId);
+    const cached = getCacheValue(cacheKey);
+    if (cached) {
+          res.status(200).json({ success: true, data: cached, error: null });
+          return;
+    }
+
     const documents = await Document.find({ userId });
+    setCacheValue(cacheKey, documents);
 
     res.status(200).json({
           success: true,
@@ -80,5 +93,6 @@ export const deleteDocument = async (req: Request, res: Response): Promise<void>
     if (document) {
           await Chunk.deleteMany({ documentId: document._id });
     }
+    deleteCacheValue(documentsCacheKey(userId));
     res.status(204).send();
 };

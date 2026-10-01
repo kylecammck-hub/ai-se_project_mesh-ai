@@ -39,7 +39,8 @@ interface ApiResponse<T> {
 
 // The server doesn't run on the same origin as the Vite dev server, so point
 // requests at it directly. Override with VITE_API_URL for other environments.
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:3000');
 
 const TOKEN_KEY = 'token';
 

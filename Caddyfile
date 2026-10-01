@@ -1,0 +1,15 @@
+# Public entry point. SITE_ADDRESS is your subdomain in production
+# (e.g. meshai.example.com -> automatic HTTPS). Defaults to :80 locally,
+# so the app is served at http://localhost.
+{$SITE_ADDRESS::80} {
+  encode gzip
+
+  handle /api/* {
+    uri strip_prefix /api
+    reverse_proxy backend:3000
+  }
+
+  handle {
+    reverse_proxy frontend:80
+  }
+}

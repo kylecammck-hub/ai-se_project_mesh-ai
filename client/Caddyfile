@@ -1,0 +1,8 @@
+# Serves the built React app. Unknown paths fall back to index.html
+# so client-side routes (React Router) work on refresh.
+:80 {
+  root * /srv
+  encode gzip
+  try_files {path} /index.html
+  file_server
+}
