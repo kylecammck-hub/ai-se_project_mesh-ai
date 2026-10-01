@@ -10,6 +10,14 @@ import { logger } from '../utils/logger.js';
 import { getCacheValue, setCacheValue, deleteCacheValue } from '../utils/cache.js';
 
 const chatsCacheKey = (userId: string): string => `chats:${userId}`;
+import { logger } from '../utils/logger.js';
+import { getCacheValue, setCacheValue, deleteCacheValue } from '../utils/cache.js';
+
+const chatsCacheKey = (userId: string): string => `chats:${userId}`;
+import { logger } from '../utils/logger.js';
+import { getCacheValue, setCacheValue, deleteCacheValue } from '../utils/cache.js';
+
+const chatsCacheKey = (userId: string): string => `chats:${userId}`;
 
 export const getChats = async (req: Request, res: Response): Promise<void> => {
     const userId = req.user!.userId;
@@ -20,7 +28,23 @@ export const getChats = async (req: Request, res: Response): Promise<void> => {
           return;
     }
 
+    const cacheKey = chatsCacheKey(userId);
+    const cached = getCacheValue(cacheKey);
+    if (cached) {
+          res.status(200).json({ success: true, data: cached, error: null });
+          return;
+    }
+
+    const cacheKey = chatsCacheKey(userId);
+    const cached = getCacheValue(cacheKey);
+    if (cached) {
+          res.status(200).json({ success: true, data: cached, error: null });
+          return;
+    }
+
     const chats = await Chat.find({ userId });
+    setCacheValue(cacheKey, chats);
+    setCacheValue(cacheKey, chats);
     setCacheValue(cacheKey, chats);
 
     res.status(200).json({
@@ -44,6 +68,8 @@ export const createChat = async (req: Request, res: Response): Promise<void> => 
     }
 
     const chat = await Chat.create({ title, userId });
+    deleteCacheValue(chatsCacheKey(userId));
+    deleteCacheValue(chatsCacheKey(userId));
     deleteCacheValue(chatsCacheKey(userId));
 
     res.status(201).json({
@@ -78,6 +104,8 @@ export const getChatById = async (req: Request, res: Response): Promise<void> =>
 export const deleteChat = async (req: Request, res: Response): Promise<void> => {
     const userId = req.user!.userId;
     await Chat.findOneAndDelete({ _id: req.params.id, userId });
+    deleteCacheValue(chatsCacheKey(userId));
+    deleteCacheValue(chatsCacheKey(userId));
     deleteCacheValue(chatsCacheKey(userId));
     res.status(204).send();
 };
