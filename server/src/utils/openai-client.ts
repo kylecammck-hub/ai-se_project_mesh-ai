@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-export const LLM_MODEL = 'Qwen/Qwen3-32B';
+export const LLM_MODEL = 'Qwen/Qwen3-30B-A3B-Instruct-2507';
 
 let client: OpenAI;
 
