@@ -2,14 +2,14 @@
 
 Mesh AI is a full-stack knowledge-base assistant. Upload PDF documents, and chat with an AI that answers questions using only the content of your documents (retrieval-augmented generation).
 
-**Live app:** https://YOUR-SUBDOMAIN-HERE
+**Live app:** https://meshai-kyle.duckdns.org
 
 ## Tech stack
 
 - **Frontend:** React 18, TypeScript, Vite, React Router, react-markdown
 - **Backend:** Node.js 22, Express, TypeScript, Mongoose
 - **Database:** MongoDB 7
-- **AI:** Nebius AI Studio (OpenAI-compatible API) — `Qwen/Qwen3-Embedding-8B` for embeddings, `Qwen/Qwen3-32B` for chat
+- **AI:** Nebius AI Studio (OpenAI-compatible API) — `Qwen/Qwen3-Embedding-8B` for embeddings, `Qwen/Qwen3-30B-A3B-Instruct-2507` for chat
 - **Auth & security:** JWT, bcryptjs, express-rate-limit
 - **Logging:** Winston, Morgan
 - **Infrastructure:** Docker (multi-stage builds), Docker Compose, Caddy (reverse proxy + automatic HTTPS), AWS EC2
